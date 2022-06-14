@@ -2,31 +2,39 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import Select from 'react-select'
+import axios from 'axios'
 
-const BASE_API_URL = 'localhost/8080'
+const BASE_API_URL = 'http://localhost:8080'
 
 const RegisterBuyer = () => {
-  const [states, setStates] = useState()
-  const [cities, setCities] = useState()
-
   useEffect(() => {
     const getAllStates = async () => {
-      let states = await fetch(`${BASE_API_URL}/states`)
-      console.log(states)
+      await axios
+        .get(`${BASE_API_URL}/states`)
+        .then((res) => {
+          let options = []
+          res.data.forEach((stateObject, i) => {
+            let current = { value: stateObject.id, label: stateObject.state }
+            options[i] = current
+          })
+          setStates(options)
+        })
+        .catch((err) => {
+          console.log('ERROR WHILE FETCHING STATES FOROM API ---> ', err)
+        })
     }
 
     getAllStates()
   }, [])
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ]
+
+  const [states, setStates] = useState({ value: 0, label: 'select' })
+  const [cities, setCities] = useState()
+  const [state, setState] = useState()
+  const [city, setCity] = useState()
   const [name, setName] = useState()
   const [companyName, setCompanyName] = useState()
   const [buyerType, setBuyerType] = useState()
-  const [state, setState] = useState(options[0])
-  const [city, setCity] = useState(options[0])
+
   const [offileLandline, setOfficeLandline] = useState()
   const [mobile, setMobile] = useState()
   const [email, setEmail] = useState()
@@ -37,8 +45,28 @@ const RegisterBuyer = () => {
   const [GSTNumber, setGSTNumber] = useState()
   const [address, setAddress] = useState()
 
-  const handleSubmit = (e) => {
+  const fetchCities = async (curState) => {
+    const curStateId = curState.value
+
+    await axios
+      .get(`${BASE_API_URL}/${curStateId}/cities`)
+      .then((res) => {
+        let options = []
+        res.data.forEach((cityObject, i) => {
+          let current = { value: cityObject.id, label: cityObject.city }
+          options[i] = current
+        })
+        setCities(options)
+        setCity(options[0])
+      })
+      .catch((err) => {
+        console.log('ERROR WHILE FETCHING CITIES FOROM API ---> ', err)
+      })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
+
     // console.log(
     //   name,
     //   companyName,
@@ -60,6 +88,7 @@ const RegisterBuyer = () => {
 
   return (
     <Container>
+      {/* <button onClick={(e) => handleSubmit(e)}>press me </button> */}
       <Header>STEP 1: Company Representative Info</Header>
       <Form onSubmit={(e) => handleSubmit(e)}>
         <FormData>
@@ -107,9 +136,12 @@ const RegisterBuyer = () => {
             State
             <br />
             <StateInput
-              options={options}
+              options={states}
               value={state}
-              onChange={(value) => setState(value)}
+              onChange={(curState) => {
+                setState(curState)
+                fetchCities(curState)
+              }}
               required
             />
           </Label>
@@ -117,9 +149,9 @@ const RegisterBuyer = () => {
             City
             <br />
             <CityInput
-              options={options}
+              options={cities}
               value={city}
-              onChange={(value) => setCity(value)}
+              onChange={(curCity) => setCity(curCity)}
               required
             />
           </Label>
