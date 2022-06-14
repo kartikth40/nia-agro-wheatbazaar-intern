@@ -1,9 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import Select from 'react-select'
 
+const BASE_API_URL = 'localhost/8080'
+
 const RegisterBuyer = () => {
+  const [states, setStates] = useState()
+  const [cities, setCities] = useState()
+
+  useEffect(() => {
+    const getAllStates = async () => {
+      let states = await fetch(`${BASE_API_URL}/states`)
+      console.log(states)
+    }
+
+    getAllStates()
+  }, [])
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
