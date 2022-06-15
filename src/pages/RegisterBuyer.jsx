@@ -28,13 +28,12 @@ const RegisterBuyer = () => {
   }, [])
 
   const [states, setStates] = useState({ value: 0, label: 'select' })
-  const [cities, setCities] = useState()
+  const [cities, setCities] = useState({ value: 0, label: 'select' })
   const [state, setState] = useState()
   const [city, setCity] = useState()
   const [name, setName] = useState()
   const [companyName, setCompanyName] = useState()
   const [buyerType, setBuyerType] = useState()
-
   const [offileLandline, setOfficeLandline] = useState()
   const [mobile, setMobile] = useState()
   const [email, setEmail] = useState()
@@ -66,30 +65,50 @@ const RegisterBuyer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // on submit code
 
-    // console.log(
-    //   name,
-    //   companyName,
-    //   buyerType,
-    //   state,
-    //   city,
-    //   offileLandline,
-    //   mobile,
-    //   email,
-    //   productsManufactured,
-    //   password,
-    //   confirmedPassword,
-    //   website,
-    //   GSTNumber,
-    //   address,
-    //   tnc
-    // )
+    console.log([
+      state.label,
+      city.label,
+      name,
+      companyName,
+      buyerType,
+      offileLandline,
+      mobile,
+      email,
+      productsManufactured,
+      password,
+      confirmedPassword,
+      website,
+      GSTNumber,
+      address,
+    ])
+  }
+
+  const handleFill = async () => {
+    await fetchCities({ value: 13, label: 'Haryana' })
+    setState({ value: 13, label: 'Haryana' })
+    setCity({ value: 446, label: 'Gurgaon' })
+    setName('Kartik')
+    setCompanyName('Some Company')
+    setBuyerType('Manufacturer')
+    setOfficeLandline(1234567890)
+    setMobile(9090909090)
+    setEmail('kartik@gmail.com')
+    setProductsManufactured('some products')
+    setPassword('123456')
+    setConfirmedPassword('123456')
+    setWebsite('https://kartikthakur.tech')
+    setGSTNumber('22AABBB0000A1Z5')
+    setAddress('House no. 1, New Palam Vihar, Gurgaon, Haryana')
   }
 
   return (
     <Container>
-      {/* <button onClick={(e) => handleSubmit(e)}>press me </button> */}
-      <Header>STEP 1: Company Representative Info</Header>
+      <Header>
+        STEP 1: Company Representative Info
+        <button onClick={(e) => handleFill()}>Auto fill</button>
+      </Header>
       <Form onSubmit={(e) => handleSubmit(e)}>
         <FormData>
           <Label>
@@ -97,6 +116,7 @@ const RegisterBuyer = () => {
             <br />
             <NameInput
               type="text"
+              placeholder="Your Name"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -107,6 +127,7 @@ const RegisterBuyer = () => {
             <br />
             <CompanyNameInput
               type="text"
+              placeholder="Your Company Name"
               required
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
@@ -118,6 +139,7 @@ const RegisterBuyer = () => {
             <BuyerTypeContainer onChange={(e) => setBuyerType(e.target.value)}>
               <BuyerTypeInput
                 type="radio"
+                checked={buyerType === 'Trader(Buyer)'}
                 value="Trader(Buyer)"
                 name="buyertype"
               />
@@ -125,6 +147,7 @@ const RegisterBuyer = () => {
               <br />
               <BuyerTypeInput
                 type="radio"
+                checked={buyerType === 'Manufacturer'}
                 value="Manufacturer"
                 name="buyertype"
                 required
@@ -160,6 +183,7 @@ const RegisterBuyer = () => {
             <br />
             <OfficeLandlineInput
               type="text"
+              placeholder="Your Office Landline"
               value={offileLandline}
               onChange={(e) => setOfficeLandline(e.target.value)}
             />
@@ -169,6 +193,7 @@ const RegisterBuyer = () => {
             <br />
             <MobileInput
               type="tel"
+              placeholder="Your Mobile"
               required
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
@@ -179,6 +204,7 @@ const RegisterBuyer = () => {
             <br />
             <EmailInput
               type="email"
+              placeholder="Your Email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -189,6 +215,7 @@ const RegisterBuyer = () => {
             <br />
             <ProductsManufacturedInput
               type="text"
+              placeholder="Your Product"
               required
               value={productsManufactured}
               onChange={(e) => setProductsManufactured(e.target.value)}
@@ -199,6 +226,7 @@ const RegisterBuyer = () => {
             <br />
             <PasswordInput
               type="password"
+              placeholder="Your Password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -209,6 +237,7 @@ const RegisterBuyer = () => {
             <br />
             <ConfirmPasswordInput
               type="password"
+              placeholder="Confirm Password"
               required
               value={confirmedPassword}
               onChange={(e) => setConfirmedPassword(e.target.value)}
@@ -219,6 +248,7 @@ const RegisterBuyer = () => {
             <br />
             <WebsiteInput
               type="url"
+              placeholder="Your Website"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
             />
@@ -228,6 +258,7 @@ const RegisterBuyer = () => {
             <br />
             <GSTNumberInput
               type="text"
+              placeholder="Enter GST Number"
               value={GSTNumber}
               onChange={(e) => setGSTNumber(e.target.value)}
             />
@@ -237,6 +268,7 @@ const RegisterBuyer = () => {
             <br />
             <AddressInput
               type="text"
+              placeholder="Please Enter Your Complete Address."
               required
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -270,6 +302,8 @@ const Container = styled.div`
   padding: 20px;
 `
 const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
   font-size: 30px;
   padding-bottom: 10px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
